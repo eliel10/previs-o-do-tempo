@@ -1,6 +1,3 @@
-import elements from "./getDados.js";
-console.log(elements);
-
 
 // parametros que seram passados para o end point
 var configParameters =
