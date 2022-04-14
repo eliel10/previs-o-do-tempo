@@ -29,6 +29,7 @@ requestJson.then(response=>{
 })
 .then(dados=>{
     showContent(dados);
+    showContentWeek(dados);
 })
 .catch(error=>{
     alert(error);
@@ -36,16 +37,55 @@ requestJson.then(response=>{
 
 
 const showContent = (dados)=>{
-    elements.infoLocale.date.textContent=dados.results.date;
-    elements.infoLocale.time.textContent=dados.results.time;
-    elements.infoLocale.locale.textContent=dados.results.city_name;
-    elements.infoLocale.period.textContent=dados.results.currently;
+    var sectionMain = document.querySelector(".clima-principal");
+    var mainTemp = 
+    `<div class="city-atual">
+        <span class='city'>Clima atual em <b>${dados.results.city_name}</b></span>
+        <span class='periodo'><b>${dados.results.currently}</b></span>
+    </div>
+    <div class='data-atual'>
+        <span class='date'><b>${dados.results.date}</b></span>
+        <span class='time'>Última atualização <b>${dados.results.time}</b></span>
+    </div>
+    <div class='temperatura-atual'>
+        <img src='icons/chuva.png' class='icon-temperatura'>
+        <span class='temperatura'><b>${dados.results.temp}&deg C</b> </span>
+    </div>
+    <div class='descricao-atual'>
+        <span class='descricao'>${dados.results.description}</span>
+        <span class='temperatura-minima'>Minima <b>${dados.results.forecast[0].min}&deg C</b></span>
+    </div>
+    <div class='umidade-vento-atual'>
+        <span class='velocidade-vento'>Vento <b>${dados.results.wind_speedy}</b>
+        </span>
+        <span class='umidade'>Umidade <b>${dados.results.humidity}%</b></span>
+    </div>`;
 
-    elements.descriptionTemp.decription.textContent=dados.results.description;
-    elements.descriptionTemp.min.textContent=dados.results.forecast[0].min;
-    elements.descriptionTemp.wind.textContent=dados.results.wind_speedy;
-    elements.descriptionTemp.humidity.textContent=dados.results.humidity;
+    sectionMain.innerHTML=mainTemp;
+
 }
+
+const showContentWeek = (dados)=>{
+    var nextDays = dados.results.forecast;
+    var previsionWeek = "";
+    var containerNextDays = document.querySelector(".clima-secundario-content");
+    nextDays.forEach(element => {
+        previsionWeek+=
+        `<div class='clima-posterior'>
+            <div class='data-icon'>
+                <span class='date-posterior'>${element.weekday}. ${element.date}</span>
+                <img src='icons/chuva.png' class='icon-temperatura-posterior'>
+            </div>
+            <div class='min-max-seguintes-posterior'>
+                <span class='max-posterior'>${element.max}&deg C</span>
+                <span class='min-posterior'>${element.min}&deg C</span>
+            </div>
+        </div>`
+    });
+
+    containerNextDays.innerHTML=previsionWeek;
+}
+
 
 
 

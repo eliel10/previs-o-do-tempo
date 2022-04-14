@@ -65,6 +65,9 @@ main{
 .temperatura b{
 	font-size:50px;
 }
+.periodo{
+	text-transform: capitalize;
+}
 .clima-secundario .clima-secundario-content{
 	display:flex;
 	width:fit-content;
@@ -79,7 +82,7 @@ main{
 }
 .clima-posterior{
 	display:flex;
-	width:150px;
+	width:200px;
 	padding:10px;
 	justify-content:space-between;
 	border:1px solid #fff;

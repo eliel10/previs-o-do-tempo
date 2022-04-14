@@ -22,6 +22,8 @@ var descriptionTemp =
     humidity:document.querySelector(".umidade b")
 }
 
-const elements = {infoLocale,degImg,descriptionTemp};
+var climaSecundarioContent = document.querySelector(".clima-secundario-content");
+
+const elements = {infoLocale,degImg,descriptionTemp,climaSecundarioContent};
 
 export default elements;
