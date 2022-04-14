@@ -2,7 +2,7 @@
 // parametros que seram passados para o end point
 var configParameters =
 {
-    key:"f3d20c67",
+    key:"0800b43b",
     format:"json-cors",
     city_name:"Suzano,SP"
 }
