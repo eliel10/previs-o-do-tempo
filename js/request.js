@@ -12,7 +12,7 @@ var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=$
 
 
 // faz o request
-var requestJson = fetch(url,{method:"GET",mode:"no-cors",cache:"no-cache"});
+var requestJson = fetch(url,{method:"GET",mode:"cors",cache:"no-cache"});
 
 
 // retorna os dados da promise e 
