@@ -5,33 +5,65 @@ var configParameters =
 {
     key:"0800b43b",
     format:"json-cors",
-    city_name:"Suzano,SP"
+    city_name:"Suzano"
 }
 
 // url da API
-var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=${configParameters.format}&city_name=${configParameters.city_name}`;
+const getUrl = (configParameters)=>{
+    var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=${configParameters.format}&city_name=${configParameters.city_name}`
+    return url;
+}
+;
+
+
+const formCity = document.querySelector("#form");
+
+formCity.addEventListener("submit",(even)=>{
+    even.preventDefault();
+    var cityName = formCity["city-name"].value;
+    cityName=cityName.replace(/\s/g,"");
+    try{
+        if(cityName!=""){
+            configParameters.city_name=cityName;
+            requestData(getUrl(configParameters));
+        }
+        else{
+            throw "Campo Vazio";
+        }
+    }
+    catch(error){
+        alert(error);
+    }
+    
+    
+})
 
 
 // faz o request
-var requestJson = fetch(url,{method:"GET",mode:"cors",cache:"no-cache"});
+
+const requestData = (url)=>{
+
+    var requestJson = fetch(url,{method:"GET",mode:"cors",cache:"no-cache"});
+
+    requestJson.then(response=>{
+        if(response.ok){
+            return response.json();
+        }
+    })
+    .then(dados=>{
+        showContent(dados);
+        showContentWeek(dados);
+    })
+    .catch(error=>{
+        console.log(error);
+    })
+}
+
+requestData(getUrl(configParameters));
 
 
 // retorna os dados da promise e 
-requestJson.then(response=>{
-    if(response.ok){
-        return response.json();
-    }
-    else{
-        throw "nao encontrado";
-    }
-})
-.then(dados=>{
-    showContent(dados);
-    showContentWeek(dados);
-})
-.catch(error=>{
-    console.log(error);
-})
+
 
 
 const showContent = (dados)=>{
