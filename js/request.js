@@ -21,7 +21,7 @@ const formCity = document.querySelector("#form");
 formCity.addEventListener("submit",(even)=>{
     even.preventDefault();
     var cityName = formCity["city-name"].value;
-    cityName=cityName.replace(/\s/g,"");
+    cityName=cityName.replace(/^\s+$/,"");
     try{
         if(cityName!=""){
             configParameters.city_name=cityName;
