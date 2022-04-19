@@ -1,3 +1,4 @@
+import imagesTemp from "./imagesTemp.js";
 
 // parametros que seram passados para o end point
 var configParameters =
@@ -29,14 +30,18 @@ requestJson.then(response=>{
     showContentWeek(dados);
 })
 .catch(error=>{
-    alert(error);
+    console.log(error);
 })
 
 
 const showContent = (dados)=>{
     var sectionMain = document.querySelector(".clima-principal");
+    var imgTemp = dados.results.description;
+    var imgTempP = dados.results.currently;
     var mainTemp = 
-    `<div class="city-atual">
+    `
+    <img src='${imagesTemp[imgTemp][imgTempP].background}' style='width:100%; height:100%;position:absolute;z-index:-1;'>
+    <div class="city-atual">
         <span class='city'>Clima atual em <b>${dados.results.city_name}</b></span>
         <span class='periodo'><b>${dados.results.currently}</b></span>
     </div>
@@ -45,7 +50,7 @@ const showContent = (dados)=>{
         <span class='time'>Última atualização <b>${dados.results.time}</b></span>
     </div>
     <div class='temperatura-atual'>
-        <img src='icons/chuva.png' class='icon-temperatura'>
+        <img src='${imagesTemp[imgTemp][imgTempP].icon}' class='icon-temperatura'>
         <span class='temperatura'><b>${dados.results.temp}&deg C</b> </span>
     </div>
     <div class='descricao-atual'>
@@ -71,7 +76,7 @@ const showContentWeek = (dados)=>{
         `<div class='clima-posterior'>
             <div class='data-icon'>
                 <span class='date-posterior'>${element.weekday}. ${element.date}</span>
-                <img src='icons/chuva.png' class='icon-temperatura-posterior'>
+                <img src='${imagesTemp[element.description]["dia"].icon}' class='icon-temperatura-posterior'>
             </div>
             <div class='min-max-seguintes-posterior'>
                 <span class='max-posterior'>${element.max}&deg C</span>
