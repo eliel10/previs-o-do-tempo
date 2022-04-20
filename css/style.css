@@ -108,7 +108,7 @@ body{
 	justify-content:center;
 	align-items:center;
 }
-.btn-back:hover,.btn-next:hover{
+.btn-back:active,.btn-next:active{
 	border:1px solid #fff;
 }
 .btn-back img,.btn-next img{
