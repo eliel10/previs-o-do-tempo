@@ -3,7 +3,7 @@ import imagesTemp from "./imagesTemp.js";
 // parametros que seram passados para o end point
 var configParameters =
 {
-    key:"0800b43b",
+    key:"e5a29a26",
     format:"json-cors",
     city_name:"Suzano"
 }
