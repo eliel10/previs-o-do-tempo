@@ -7,6 +7,13 @@ var configParameters =
     format:"json-cors",
 }
 
+var citys = 
+{
+    "cityCurrent":"Suzano",
+    "cityPrimary":"São Paulo",
+    "citySecundary":"Rio de Janeiro"
+}
+
 // url da API
 const getUrl = (configParameters,city)=>{
     var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=${configParameters.format}&city_name=${city}`;
@@ -140,8 +147,19 @@ const showContentWeek = (dados)=>{
 }
 
 
-requestData(getUrl(configParameters,"Suzano"));
-requestData(getUrl(configParameters,"São Paulo"),true);
-requestData(getUrl(configParameters,"Rio de Janeiro"),true);
+const load = ()=>{
+    requestData(getUrl(configParameters,citys.cityCurrent));
+    requestData(getUrl(configParameters,citys.cityPrimary),true);
+    requestData(getUrl(configParameters,citys.citySecundary),true);
+}
+
+var timeReload = 1000*60*30//30 minutes
+
+setInterval(()=>{
+    load();
+},timeReload)
+
+load();
+
 
 
