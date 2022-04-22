@@ -5,15 +5,13 @@ var configParameters =
 {
     key:"e5a29a26",
     format:"json-cors",
-    city_name:"Suzano"
 }
 
 // url da API
-const getUrl = (configParameters)=>{
-    var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=${configParameters.format}&city_name=${configParameters.city_name}`
+const getUrl = (configParameters,city)=>{
+    var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=${configParameters.format}&city_name=${city}`;
     return url;
 }
-;
 
 
 const formCity = document.querySelector("#form");
@@ -24,8 +22,7 @@ formCity.addEventListener("submit",(even)=>{
     cityName=cityName.replace(/^\s+$/,"");
     try{
         if(cityName!=""){
-            configParameters.city_name=cityName;
-            requestData(getUrl(configParameters));
+            requestData(getUrl(configParameters,cityName));
         }
         else{
             throw "Campo Vazio";
@@ -41,7 +38,7 @@ formCity.addEventListener("submit",(even)=>{
 
 // faz o request
 
-const requestData = (url)=>{
+const requestData = (url,citysDefault)=>{
 
     var requestJson = fetch(url,{method:"GET",mode:"cors",cache:"no-cache"});
 
@@ -51,15 +48,37 @@ const requestData = (url)=>{
         }
     })
     .then(dados=>{
-        showContent(dados);
-        showContentWeek(dados);
+        if(citysDefault){
+            showContentCitysDefault(dados);
+        }
+        else{
+            showContent(dados);
+            showContentWeek(dados);
+        }
     })
     .catch(error=>{
         console.log(error);
     })
 }
 
-requestData(getUrl(configParameters));
+
+const showContentCitysDefault = (dados)=>{
+    var container = null;
+    var contentTemp = 
+    `<img src="" class="icon-temperatura-uf">
+    <span class="temperatura-uf"><b class="rj">${dados.results.temp}&deg C</b> </span>`;
+
+
+    if(dados.results.city_name.toLowerCase()=="são paulo"){
+        container = document.querySelector(".uf-sao_paulo .uf-content");
+    }
+    else{
+        container = document.querySelector(".uf-rio_de_janeiro .uf-content");
+    }
+
+    container.innerHTML=contentTemp;
+
+}
 
 
 // retorna os dados da promise e 
@@ -121,6 +140,8 @@ const showContentWeek = (dados)=>{
 }
 
 
-
+requestData(getUrl(configParameters,"Suzano"));
+requestData(getUrl(configParameters,"São Paulo"),true);
+requestData(getUrl(configParameters,"Rio de Janeiro"),true);
 
 
