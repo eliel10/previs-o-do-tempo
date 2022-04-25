@@ -20,6 +20,14 @@ const getUrl = (configParameters,city)=>{
     return url;
 }
 
+var containerLoading = document.querySelector(".modal-loading");
+var closeAlertErrors = document.querySelector(".close-alert");
+
+
+closeAlertErrors.addEventListener("click",(even)=>{
+    toggleElement(even.target.parentNode);
+})
+
 
 const formCity = document.querySelector("#form");
 
@@ -27,7 +35,7 @@ formCity.addEventListener("submit",(even)=>{
     even.preventDefault();
     var cityName = formCity["city-name"].value;
     cityName=cityName.replace(/^\s+$/,"");
-    toggleLoading();
+    toggleElement(containerLoading);
     try{
         if(cityName!=""){
             requestData(getUrl(configParameters,cityName));
@@ -37,7 +45,8 @@ formCity.addEventListener("submit",(even)=>{
         }
     }
     catch(error){
-        alert(error);
+        toggleElement(containerLoading);
+        showErrors(error);
     }
     
     
@@ -63,10 +72,10 @@ const requestData = (url,citysDefault)=>{
             showContent(dados);
             showContentWeek(dados);
         }
-        toggleLoading();
+        toggleElement(containerLoading);
     })
     .catch(error=>{
-        console.log(error);
+        showErrors(error);
     })
 }
 
@@ -150,15 +159,27 @@ const showContentWeek = (dados)=>{
 }
 
 
-const toggleLoading = ()=>{
-    var modalLoading = document.querySelector(".modal-loading");
-    if(modalLoading.classList.contains("enabled")){
-        modalLoading.classList.add("disabled")
+const toggleElement = (element)=>{
+    if(element.classList.contains("enabled")){
+        element.classList.remove("enabled");
+        element.classList.add("disabled");
     }
     else{
-        modalLoading.classList.add("enabled")
+        element.classList.add("enabled");
+        element.classList.remove("disabled");
     }
 }
+
+
+const showErrors = (error)=>{
+    var containerErrors = document.querySelector(".alert-errors");
+    var contentErrors = containerErrors.querySelector(".alert-errors-content");
+    var messageError = `<p class="error-message">${error}</p>`;
+    contentErrors.innerHTML=messageError;
+    toggleElement(containerErrors);
+}
+
+
 
 
 const load = ()=>{
