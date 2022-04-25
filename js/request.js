@@ -9,9 +9,9 @@ var configParameters =
 
 var citys = 
 {
-    "cityCurrent":"Suzano",
-    "cityPrimary":"São Paulo",
-    "citySecundary":"Rio de Janeiro"
+    cityCurrent:"Suzano",
+    cityPrimary:"São Paulo",
+    citySecundary:"Rio de Janeiro"
 }
 
 // url da API
@@ -27,6 +27,7 @@ formCity.addEventListener("submit",(even)=>{
     even.preventDefault();
     var cityName = formCity["city-name"].value;
     cityName=cityName.replace(/^\s+$/,"");
+    toggleLoading();
     try{
         if(cityName!=""){
             requestData(getUrl(configParameters,cityName));
@@ -62,6 +63,7 @@ const requestData = (url,citysDefault)=>{
             showContent(dados);
             showContentWeek(dados);
         }
+        toggleLoading();
     })
     .catch(error=>{
         console.log(error);
@@ -122,6 +124,7 @@ const showContent = (dados)=>{
     </div>`;
 
     sectionMain.innerHTML=mainTemp;
+    
 
 }
 
@@ -147,6 +150,17 @@ const showContentWeek = (dados)=>{
 }
 
 
+const toggleLoading = ()=>{
+    var modalLoading = document.querySelector(".modal-loading");
+    if(modalLoading.classList.contains("enabled")){
+        modalLoading.classList.add("disabled")
+    }
+    else{
+        modalLoading.classList.add("enabled")
+    }
+}
+
+
 const load = ()=>{
     requestData(getUrl(configParameters,citys.cityCurrent));
     requestData(getUrl(configParameters,citys.cityPrimary),true);
@@ -160,6 +174,8 @@ setInterval(()=>{
 },timeReload)
 
 load();
+
+
 
 
 

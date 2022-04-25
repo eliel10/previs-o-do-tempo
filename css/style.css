@@ -2,6 +2,15 @@
 	font-family:"Quicksand Regular";
 	src:url("../fontes/static/Quicksand-Regular.ttf");
 }
+@keyframes loading{
+	0%{
+		transform: rotate(0deg);
+	}
+	100%{
+		transform: rotate(360deg);
+	}
+}
+
 *{
 	margin:0;
 	padding:0;
@@ -12,11 +21,10 @@
 }
 body{
 	background-image:url("../imagens/bg-space.jpg");
-	overflow: hidden;
 }
 .container{
 	max-width: 60%;
-	margin:80px auto;
+	margin:60px auto;
 	border:1px solid #fff;
 	backdrop-filter:blur(5px);
 }
@@ -197,6 +205,24 @@ header > div:nth-child(2n){
 }
 .max-posterior,.min-posterior{
 	font-size:20px;
+}
+.modal-loading.enabled{
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0,0,0,0.6);
+}
+.modal-loading.disabled{
+	display: none;
+}
+.img-loading{
+	width: 10%;
+	animation: loading 1.5s linear infinite;
 }
 
 
