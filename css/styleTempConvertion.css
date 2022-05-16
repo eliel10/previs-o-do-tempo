@@ -1,7 +1,6 @@
 .conversao{
-	display:flex;
 	justify-content: end;
-	padding: 10px 20px;
+	padding: 5px 20px;
 }
 .button-convertion{
 	display:flex;

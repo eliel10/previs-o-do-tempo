@@ -1,6 +1,9 @@
 import imagesTemp from "./imagesTemp.js";
 import convertTemp from "./TempConvertion.js";
 
+const containerLoading = document.querySelector(".modal-loading");
+const closeAlertErrors = document.querySelector(".close-alert");
+
 // parametros que seram passados para o end point
 var configParameters =
 {
@@ -21,8 +24,8 @@ const getUrl = (configParameters,city)=>{
     return url;
 }
 
-const containerLoading = document.querySelector(".modal-loading");
-const closeAlertErrors = document.querySelector(".close-alert");
+
+var nRequest = 0;
 
 
 closeAlertErrors.addEventListener("click",(even)=>{
@@ -72,13 +75,27 @@ const requestData = (url,citysDefault)=>{
         else{
             showContent(dados);
             showContentWeek(dados);
-            convertTemp();
+            verifica();
         }
         toggleElement(containerLoading);
+        nRequest++;
     })
     .catch(error=>{
         showErrors(error);
     })
+}
+
+const verifica = ()=>{
+    var conversor = document.querySelector(".conversao");
+    var set = setInterval(()=>{
+        if(nRequest==3){
+            clearInterval(set);
+            conversor.classList.remove("disabled");
+            conversor.classList.add("enabled");
+            convertTemp();
+        }
+    },100)
+    
 }
 
 
@@ -97,7 +114,6 @@ const showContentCitysDefault = (dados)=>{
     }
 
     container.innerHTML=contentTemp;
-
 }
 
 
@@ -112,10 +128,10 @@ const showContent = (dados)=>{
     var mainTemp = 
     `
     <img src='${imagesTemp[imgTemp][imgTempP].background}' style='width:100%; height:100%;position:absolute;z-index:-1;'>
-    <div class='conversao'>
+    <span class='conversao disabled'>
         <input type='checkbox' id='checkbox-convertion'>
         <label for='checkbox-convertion'><span class='button-convertion'></span></label></label>
-    </div>
+    </span>
     <div class="city-atual">
         <span class='city'>Clima atual em <b>${dados.results.city_name}</b></span>
         <span class='periodo'><b>${dados.results.currently}</b></span>
@@ -139,7 +155,6 @@ const showContent = (dados)=>{
     </div>`;
 
     sectionMain.innerHTML=mainTemp;
-    
 
 }
 
@@ -189,9 +204,9 @@ const showErrors = (error)=>{
 
 
 const load = ()=>{
-    requestData(getUrl(configParameters,citys.cityCurrent));
     requestData(getUrl(configParameters,citys.cityPrimary),true);
     requestData(getUrl(configParameters,citys.citySecundary),true);
+    requestData(getUrl(configParameters,citys.cityCurrent));
 }
 
 var timeReload = 1000*60*30//30 minutes

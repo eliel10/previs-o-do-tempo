@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 		});
 		btnNext.addEventListener("click",()=>{
 			move("left");
-			toggleBtnAction();
 		});
 		
 	})();
