@@ -25,7 +25,7 @@ const getUrl = (configParameters,city)=>{
 }
 
 
-var nRequest = 0;
+var nRequestCityDefault = 0;
 
 
 closeAlertErrors.addEventListener("click",(even)=>{
@@ -78,7 +78,6 @@ const requestData = (url,citysDefault)=>{
             verifica();
         }
         toggleElement(containerLoading);
-        nRequest++;
     })
     .catch(error=>{
         showErrors(error);
@@ -88,7 +87,8 @@ const requestData = (url,citysDefault)=>{
 const verifica = ()=>{
     var conversor = document.querySelector(".conversao");
     var set = setInterval(()=>{
-        if(nRequest==3){
+        console.log(nRequestCityDefault);
+        if(nRequestCityDefault>=2){
             clearInterval(set);
             conversor.classList.remove("disabled");
             conversor.classList.add("enabled");
@@ -114,6 +114,7 @@ const showContentCitysDefault = (dados)=>{
     }
 
     container.innerHTML=contentTemp;
+    nRequestCityDefault++;
 }
 
 
