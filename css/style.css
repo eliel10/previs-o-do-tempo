@@ -33,7 +33,6 @@ body{
 .clima-principal{
 	position: relative;
 	background-color:rgba(0,0,0,.5);
-	/* background:url(../imagens/bg-opacity.png),url(../imagens/noite/chuvisco-noite.jpg); */
 	background-position:center;
 	background-size:cover;
 	position:relative;

@@ -1,0 +1,32 @@
+.conversao{
+	display:flex;
+	justify-content: end;
+	padding: 10px 20px;
+}
+.button-convertion{
+	display:flex;
+	align-items:center;
+	width:50px;
+	border:1px solid #fff;
+	border-radius:60px;
+	transition:2s;
+}
+.button-convertion::before{
+	content:"°C";
+	color:#000;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	width:25px;
+	height:25px;
+	background-color:#fff;
+	border-radius:50%;
+	transition:.5s;
+}
+#checkbox-convertion{
+	width:0;
+}
+#checkbox-convertion:checked + label .button-convertion::before{
+	content:"ºF";
+	transform:translateX(23px);
+}

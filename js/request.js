@@ -1,4 +1,5 @@
 import imagesTemp from "./imagesTemp.js";
+import convertTemp from "./TempConvertion.js";
 
 // parametros que seram passados para o end point
 var configParameters =
@@ -20,8 +21,8 @@ const getUrl = (configParameters,city)=>{
     return url;
 }
 
-var containerLoading = document.querySelector(".modal-loading");
-var closeAlertErrors = document.querySelector(".close-alert");
+const containerLoading = document.querySelector(".modal-loading");
+const closeAlertErrors = document.querySelector(".close-alert");
 
 
 closeAlertErrors.addEventListener("click",(even)=>{
@@ -71,6 +72,7 @@ const requestData = (url,citysDefault)=>{
         else{
             showContent(dados);
             showContentWeek(dados);
+            convertTemp();
         }
         toggleElement(containerLoading);
     })
@@ -84,7 +86,7 @@ const showContentCitysDefault = (dados)=>{
     var container = null;
     var contentTemp = 
     `<img src="" class="icon-temperatura-uf">
-    <span class="temperatura-uf"><b class="rj">${dados.results.temp}&deg C</b> </span>`;
+    <span class="temperatura-uf"><b class="tmp">${dados.results.temp}&deg C</b> </span>`;
 
 
     if(dados.results.city_name.toLowerCase()=="são paulo"){
@@ -110,6 +112,10 @@ const showContent = (dados)=>{
     var mainTemp = 
     `
     <img src='${imagesTemp[imgTemp][imgTempP].background}' style='width:100%; height:100%;position:absolute;z-index:-1;'>
+    <div class='conversao'>
+        <input type='checkbox' id='checkbox-convertion'>
+        <label for='checkbox-convertion'><span class='button-convertion'></span></label></label>
+    </div>
     <div class="city-atual">
         <span class='city'>Clima atual em <b>${dados.results.city_name}</b></span>
         <span class='periodo'><b>${dados.results.currently}</b></span>
@@ -120,11 +126,11 @@ const showContent = (dados)=>{
     </div>
     <div class='temperatura-atual'>
         <img src='${imagesTemp[imgTemp][imgTempP].icon}' class='icon-temperatura'>
-        <span class='temperatura'><b>${dados.results.temp}&deg C</b> </span>
+        <span class='temperatura'><b class='tmp'>${dados.results.temp}&deg C</b> </span>
     </div>
     <div class='descricao-atual'>
         <span class='descricao'>${dados.results.description}</span>
-        <span class='temperatura-minima'>Minima <b>${dados.results.forecast[0].min}&deg C</b></span>
+        <span class='temperatura-minima'>Minima <b class='tmp'>${dados.results.forecast[0].min}&deg C</b></span>
     </div>
     <div class='umidade-vento-atual'>
         <span class='velocidade-vento'>Vento <b>${dados.results.wind_speedy}</b>
@@ -149,8 +155,8 @@ const showContentWeek = (dados)=>{
                 <img src='${imagesTemp[element.description]["dia"].icon}' class='icon-temperatura-posterior'>
             </div>
             <div class='min-max-seguintes-posterior'>
-                <span class='max-posterior'>${element.max}&deg C</span>
-                <span class='min-posterior'>${element.min}&deg C</span>
+                <span class='max-posterior tmp'>${element.max}&deg C</span>
+                <span class='min-posterior tmp'>${element.min}&deg C</span>
             </div>
         </div>`
     });
