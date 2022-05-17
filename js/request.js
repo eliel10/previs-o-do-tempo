@@ -1,5 +1,6 @@
 import imagesTemp from "./imagesTemp.js";
-import convertTemp from "./TempConvertion.js";
+import { toFahrenheit } from "./TempConvertion.js";
+import { convertTemp } from "./TempConvertion.js";
 
 const containerLoading = document.querySelector(".modal-loading");
 const closeAlertErrors = document.querySelector(".close-alert");
@@ -27,10 +28,11 @@ const getUrl = (configParameters,city)=>{
 
 var nRequestCityDefault = 0;
 
-
-closeAlertErrors.addEventListener("click",(even)=>{
-    toggleElement(even.target.parentNode);
-})
+const setLocalMeasure = ()=>{
+    if(!localStorage.getItem("checked")){
+        localStorage.setItem("checked",JSON.stringify({checked:false}));
+    }
+}
 
 
 const formCity = document.querySelector("#form");
@@ -103,7 +105,7 @@ const showContentCitysDefault = (dados)=>{
     var container = null;
     var contentTemp = 
     `<img src="" class="icon-temperatura-uf">
-    <span class="temperatura-uf"><b class="tmp">${dados.results.temp}&deg C</b> </span>`;
+    <span class="temperatura-uf"><b class="tmp">${checkLocalStorageMeasure(dados.results.temp)}</b> </span>`;
 
 
     if(dados.results.city_name.toLowerCase()=="são paulo"){
@@ -120,6 +122,11 @@ const showContentCitysDefault = (dados)=>{
 
 // retorna os dados da promise e 
 
+function checkLocalStorageMeasure(dados){
+    var value ;
+    value = JSON.parse(localStorage.getItem("checked")).checked ? toFahrenheit(dados) : dados + "º C";
+    return value;
+}
 
 
 const showContent = (dados)=>{
@@ -143,11 +150,11 @@ const showContent = (dados)=>{
     </div>
     <div class='temperatura-atual'>
         <img src='${imagesTemp[imgTemp][imgTempP].icon}' class='icon-temperatura'>
-        <span class='temperatura'><b class='tmp'>${dados.results.temp}&deg C</b> </span>
+        <span class='temperatura'><b class='tmp'>${checkLocalStorageMeasure(dados.results.temp)}</b> </span>
     </div>
     <div class='descricao-atual'>
         <span class='descricao'>${dados.results.description}</span>
-        <span class='temperatura-minima'>Minima <b class='tmp'>${dados.results.forecast[0].min}&deg C</b></span>
+        <span class='temperatura-minima'>Minima <b class='tmp'>${checkLocalStorageMeasure(dados.results.forecast[0].min)}</b></span>
     </div>
     <div class='umidade-vento-atual'>
         <span class='velocidade-vento'>Vento <b>${dados.results.wind_speedy}</b>
@@ -171,8 +178,8 @@ const showContentWeek = (dados)=>{
                 <img src='${imagesTemp[element.description]["dia"].icon}' class='icon-temperatura-posterior'>
             </div>
             <div class='min-max-seguintes-posterior'>
-                <span class='max-posterior tmp'>${element.max}&deg C</span>
-                <span class='min-posterior tmp'>${element.min}&deg C</span>
+                <span class='max-posterior tmp'>${checkLocalStorageMeasure(element.max)}</span>
+                <span class='min-posterior tmp'>${checkLocalStorageMeasure(element.min)}</span>
             </div>
         </div>`
     });
@@ -193,6 +200,11 @@ const toggleElement = (element)=>{
 }
 
 
+closeAlertErrors.addEventListener("click",(even)=>{
+    toggleElement(even.target.parentNode);
+})
+
+
 const showErrors = (error)=>{
     var containerErrors = document.querySelector(".alert-errors");
     var contentErrors = containerErrors.querySelector(".alert-errors-content");
@@ -202,9 +214,8 @@ const showErrors = (error)=>{
 }
 
 
-
-
 const load = ()=>{
+    setLocalMeasure();
     requestData(getUrl(configParameters,citys.cityPrimary),true);
     requestData(getUrl(configParameters,citys.citySecundary),true);
     requestData(getUrl(configParameters,citys.cityCurrent));
