@@ -36,6 +36,4 @@
 
 	 }
 
-	export { toCelsius };
-	export { toFahrenheit };
-	export { convertTemp };
+	export { toFahrenheit, convertTemp};

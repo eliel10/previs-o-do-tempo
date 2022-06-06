@@ -1,6 +1,5 @@
 import imagesTemp from "./imagesTemp.js";
-import { toFahrenheit } from "./TempConvertion.js";
-import { convertTemp } from "./TempConvertion.js";
+import { toFahrenheit, convertTemp } from "./TempConvertion.js";
 
 const containerLoading = document.querySelector(".modal-loading");
 const closeAlertErrors = document.querySelector(".close-alert");
@@ -14,10 +13,25 @@ var configParameters =
 
 var citys = 
 {
-    cityCurrent:"Suzano",
-    cityPrimary:"São Paulo",
-    citySecundary:"Rio de Janeiro"
+    cityCurrent:"suzano",
+    cityPrimary:"são paulo",
+    citySecundary:"rio de janeiro"
 }
+
+var errors = 
+{
+    inputEmpty : {
+        title:"Campo Vazio",
+        suggestion:"Preencha o Campo"
+    },
+    errorRequest : {
+        title:"Erro na Requisição",
+        suggestion:"Consulte o Administrador do sistema"
+    }
+}
+
+
+var contetsLoaded = [];
 
 // url da API
 const getUrl = (configParameters,city)=>{
@@ -44,10 +58,11 @@ formCity.addEventListener("submit",(even)=>{
     toggleElement(containerLoading);
     try{
         if(cityName!=""){
-            requestData(getUrl(configParameters,cityName));
+            searchCity(configParameters,cityName);
+            addConversion();
         }
         else{
-            throw "Campo Vazio";
+            throw `${errors.inputEmpty.title}! ${errors.inputEmpty.suggestion}`;
         }
     }
     catch(error){
@@ -58,46 +73,80 @@ formCity.addEventListener("submit",(even)=>{
     
 })
 
+const loadCitys = (config,citys)=>{
+    var city1 = fetch(`https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${citys.cityCurrent}`);
+    var city2 = fetch(`https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${citys.cityPrimary}`);
+    var city3 = fetch(`https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${citys.citySecundary}`);
+    
+   Promise.all([city1,city2,city3]).then(responses=>{
+        responses.forEach(response=>{
+            if(!response.ok){
+                throw `${errors.errorRequest.title}! ${errors.errorRequest.suggestion}`;
+            }
+            response.json().then(dados=>validedResponse(dados));
+        })
+        toggleElement(containerLoading);
+   })
+   .catch((error)=>{
+        showErrors(error);
+   })
+}
 
-// faz o request
-
-const requestData = (url,citysDefault)=>{
-
-    var requestJson = fetch(url,{method:"GET",mode:"cors",cache:"no-cache"});
-
-    requestJson.then(response=>{
-        if(response.ok){
-            return response.json();
-        }
-    })
-    .then(dados=>{
-        if(citysDefault){
+const validedResponse = (dados)=>{
+    try{
+        if(dados.results.city_name.toLowerCase()==citys.citySecundary||dados.results.city_name.toLowerCase()==citys.cityPrimary){
             showContentCitysDefault(dados);
         }
         else{
             showContent(dados);
             showContentWeek(dados);
-            verifica();
+            addConversion();
         }
-        toggleElement(containerLoading);
-    })
-    .catch(error=>{
-        showErrors(error);
-    })
+    }
+    catch(e){
+        showErrors(e);
+    }
 }
 
-const verifica = ()=>{
-    var conversor = document.querySelector(".conversao");
-    var set = setInterval(()=>{
-        console.log(nRequestCityDefault);
-        if(nRequestCityDefault>=2){
-            clearInterval(set);
-            conversor.classList.remove("disabled");
-            conversor.classList.add("enabled");
-            convertTemp();
+const searchCity = (config,cityName)=>{
+    var urlCitySearch = `https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${cityName}`;
+
+    var requestCitySearch = fetch(urlCitySearch);
+
+    requestCitySearch.then(response=>{
+        if(!response.ok){
+            throw `${errors.errorRequest.title}! ${errors.errorRequest.suggestion}`;
         }
-    },100)
-    
+        response.json().then(dados=>{
+            validedResponse(dados);
+        })
+        toggleElement(containerLoading);
+    })
+    .catch((error)=>{
+        showErrors(error);
+    })
+
+}
+
+
+const validedContentLoaded = ()=>{
+    var nContent = contetsLoaded.length >= 4;
+    var hiddenContainerLoading = containerLoading.classList.contains("disabled");
+
+    if(nContent && hiddenContainerLoading){
+        return true;
+    }
+}
+
+const addConversion = ()=>{
+    var conversor = document.querySelector(".conversao");
+    var time = setInterval(()=>{
+        if(validedContentLoaded()){
+            toggleElement(conversor);
+            convertTemp();
+            clearInterval(time);
+        }
+    })
 }
 
 
@@ -116,7 +165,7 @@ const showContentCitysDefault = (dados)=>{
     }
 
     container.innerHTML=contentTemp;
-    nRequestCityDefault++;
+    contetsLoaded.push(true);
 }
 
 
@@ -141,7 +190,7 @@ const showContent = (dados)=>{
         <label for='checkbox-convertion'><span class='button-convertion'></span></label></label>
     </span>
     <div class="city-atual">
-        <span class='city'>Clima atual em <b>${dados.results.city_name}</b></span>
+        <span class='city'>Clima atual em <b>${dados.results.city}</b></span>
         <span class='periodo'><b>${dados.results.currently}</b></span>
     </div>
     <div class='data-atual'>
@@ -149,7 +198,7 @@ const showContent = (dados)=>{
         <span class='time'>Última atualização <b>${dados.results.time}</b></span>
     </div>
     <div class='temperatura-atual'>
-        <img src='${imagesTemp[imgTemp][imgTempP].icon}' class='icon-temperatura'>
+        <img src='${imagesTemp[imgTemp][imgTempP].icon}' class='icon-temperatura' alt='${imagesTemp[imgTemp][imgTempP].alt}'>
         <span class='temperatura'><b class='tmp'>${checkLocalStorageMeasure(dados.results.temp)}</b> </span>
     </div>
     <div class='descricao-atual'>
@@ -163,6 +212,7 @@ const showContent = (dados)=>{
     </div>`;
 
     sectionMain.innerHTML=mainTemp;
+    contetsLoaded.push(true);
 
 }
 
@@ -175,7 +225,7 @@ const showContentWeek = (dados)=>{
         `<div class='clima-posterior'>
             <div class='data-icon'>
                 <span class='date-posterior'>${element.weekday}. ${element.date}</span>
-                <img src='${imagesTemp[element.description]["dia"].icon}' class='icon-temperatura-posterior'>
+                <img src='${imagesTemp[element.description]["dia"].icon}' class='icon-temperatura-posterior' alt='${imagesTemp[element.description]["dia"].alt}'>
             </div>
             <div class='min-max-seguintes-posterior'>
                 <span class='max-posterior tmp'>${checkLocalStorageMeasure(element.max)}</span>
@@ -185,6 +235,7 @@ const showContentWeek = (dados)=>{
     });
 
     containerNextDays.innerHTML=previsionWeek;
+    contetsLoaded.push(true);
 }
 
 
@@ -216,9 +267,7 @@ const showErrors = (error)=>{
 
 const load = ()=>{
     setLocalMeasure();
-    requestData(getUrl(configParameters,citys.cityPrimary),true);
-    requestData(getUrl(configParameters,citys.citySecundary),true);
-    requestData(getUrl(configParameters,citys.cityCurrent));
+    loadCitys(configParameters,citys);
 }
 
 var timeReload = 1000*60*30//30 minutes
