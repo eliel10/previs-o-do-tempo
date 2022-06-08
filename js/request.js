@@ -33,12 +33,6 @@ var errors =
 
 var contetsLoaded = [];
 
-// url da API
-const getUrl = (configParameters,city)=>{
-    var url = `https://api.hgbrasil.com/weather?key=${configParameters.key}&format=${configParameters.format}&city_name=${city}`;
-    return url;
-}
-
 
 var nRequestCityDefault = 0;
 
@@ -48,14 +42,17 @@ const setLocalMeasure = ()=>{
     }
 }
 
-
 const formCity = document.querySelector("#form");
 
 formCity.addEventListener("submit",(even)=>{
     even.preventDefault();
+
     var cityName = formCity["city-name"].value;
+
     cityName=cityName.replace(/^\s+$/,"");
+
     toggleElement(containerLoading);
+
     try{
         if(cityName!=""){
             searchCity(configParameters,cityName);
@@ -73,24 +70,38 @@ formCity.addEventListener("submit",(even)=>{
     
 })
 
-const loadCitys = (config,citys)=>{
+
+const requestsCitys = (config,citys)=>{
+
     var city1 = fetch(`https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${citys.cityCurrent}`);
     var city2 = fetch(`https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${citys.cityPrimary}`);
     var city3 = fetch(`https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${citys.citySecundary}`);
-    
-   Promise.all([city1,city2,city3]).then(responses=>{
+
+    return Promise.all([city1,city2,city3]);
+}
+
+const loadCitys = ()=>{
+    var responsesPromise = requestsCitys(configParameters,citys);
+
+    responsesPromise.then(responses=>{
         responses.forEach(response=>{
             if(!response.ok){
                 throw `${errors.errorRequest.title}! ${errors.errorRequest.suggestion}`;
             }
-            response.json().then(dados=>validedResponse(dados));
+            var data = response.json();
+            data.then(value=>validedResponse(value));
         })
-        toggleElement(containerLoading);
-   })
-   .catch((error)=>{
+    })
+    .catch(error=>{
         showErrors(error);
-   })
+        enabledSearchCity();
+    })
+    .finally(()=>{
+        toggleElement(containerLoading);
+    })
 }
+
+
 
 const validedResponse = (dados)=>{
     try{
@@ -108,23 +119,25 @@ const validedResponse = (dados)=>{
     }
 }
 
-const searchCity = (config,cityName)=>{
+const searchCity = async (config,cityName)=>{
     var urlCitySearch = `https://api.hgbrasil.com/weather?key=${config.key}&format=${config.format}&city_name=${cityName}`;
 
-    var requestCitySearch = fetch(urlCitySearch);
+    try{
+        var response = await fetch(urlCitySearch);
 
-    requestCitySearch.then(response=>{
         if(!response.ok){
             throw `${errors.errorRequest.title}! ${errors.errorRequest.suggestion}`;
         }
-        response.json().then(dados=>{
-            validedResponse(dados);
-        })
-        toggleElement(containerLoading);
-    })
-    .catch((error)=>{
+        var data = await response.json();
+
+        validedResponse(data);
+    }
+    catch(error){
         showErrors(error);
-    })
+    }
+    finally{
+        toggleElement(containerLoading);
+    }
 
 }
 
@@ -265,9 +278,18 @@ const showErrors = (error)=>{
 }
 
 
+const enabledSearchCity = ()=>{
+    var btnSearch = document.querySelector(".search form button[type='submit']");
+    var inputSearch = document.querySelector(".search .city-search");
+
+    inputSearch.disabled = true;
+    btnSearch.disabled = true;
+}
+
+
 const load = ()=>{
     setLocalMeasure();
-    loadCitys(configParameters,citys);
+    loadCitys();
 }
 
 var timeReload = 1000*60*30//30 minutes
