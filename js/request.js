@@ -56,7 +56,7 @@ formCity.addEventListener("submit",(even)=>{
     try{
         if(cityName!=""){
             searchCity(configParameters,cityName);
-            addConversion();
+            //addConversion();
         }
         else{
             throw `${errors.inputEmpty.title}! ${errors.inputEmpty.suggestion}`;
@@ -155,9 +155,9 @@ const addConversion = ()=>{
     var conversor = document.querySelector(".conversao");
     var time = setInterval(()=>{
         if(validedContentLoaded()){
+            clearInterval(time);
             toggleElement(conversor);
             convertTemp();
-            clearInterval(time);
         }
     })
 }
