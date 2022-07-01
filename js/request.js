@@ -7,13 +7,13 @@ const closeAlertErrors = document.querySelector(".close-alert");
 // parametros que seram passados para o end point
 var configParameters =
 {
-    key:"e5a29a26",
+    key:"9e7377e2",
     format:"json-cors",
 }
 
 var citys = 
 {
-    cityCurrent:"suzano",
+    cityCurrent:"são paulo",
     cityPrimary:"são paulo",
     citySecundary:"rio de janeiro"
 }
