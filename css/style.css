@@ -139,7 +139,7 @@ header{
 	display:flex;
 	justify-content:space-between;
 }
-header .uf-sao_paulo, .uf-rio_de_janeiro, .search{
+header .citys-default, .search{
 	width:100%;
 	padding:15px 20px;
 }
@@ -171,7 +171,7 @@ header > div:nth-child(2n){
 .search-icon{
 	width:12px;
 }
-.uf-sao_paulo,.uf-rio_de_janeiro{
+.citys-default{
 	display:flex;
 	justify-content:space-around;
 	align-items:center;

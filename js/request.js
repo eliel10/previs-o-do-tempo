@@ -13,8 +13,8 @@ var configParameters =
 
 var citys = 
 {
-    cityCurrent:"são paulo",
-    cityPrimary:"são paulo",
+    cityCurrent:"sao paulo",
+    cityPrimary:"belo horizonte",
     citySecundary:"rio de janeiro"
 }
 
@@ -170,8 +170,8 @@ const showContentCitysDefault = (dados)=>{
     <span class="temperatura-uf"><b class="tmp">${checkLocalStorageMeasure(dados.results.temp)}</b> </span>`;
 
 
-    if(dados.results.city_name.toLowerCase()=="são paulo"){
-        container = document.querySelector(".uf-sao_paulo .uf-content");
+    if(dados.results.city_name.toLowerCase()=="belo horizonte"){
+        container = document.querySelector(".uf-belo_horizonte .uf-content");
     }
     else{
         container = document.querySelector(".uf-rio_de_janeiro .uf-content");
