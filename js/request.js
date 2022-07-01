@@ -7,7 +7,7 @@ const closeAlertErrors = document.querySelector(".close-alert");
 // parametros que seram passados para o end point
 var configParameters =
 {
-    key:"9e7377e2",
+    key:"6068c0bc",
     format:"json-cors",
 }
 

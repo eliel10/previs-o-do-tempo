@@ -8,7 +8,7 @@
 <br>
 
 
-A aplicação consome uma API de dados metereológicos dos servidores da [hgbrasil](hgbrasil.com). Retornando as informações da cidade de São Paulo e Rio de Janeiro. Permitindo fazer pesquisas de cidades do mundo inteiro.
+A aplicação consome uma API de dados metereológicos dos servidores da [hgbrasil](hgbrasil.com). Retornando as informações da cidade de São Paulo, Rio de Janeiro e Belo Horizonte. Permitindo fazer pesquisas de cidades do mundo inteiro.
 
 <br>
 
