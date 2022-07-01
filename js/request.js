@@ -56,7 +56,6 @@ formCity.addEventListener("submit",(even)=>{
     try{
         if(cityName!=""){
             searchCity(configParameters,cityName);
-            //addConversion();
         }
         else{
             throw `${errors.inputEmpty.title}! ${errors.inputEmpty.suggestion}`;

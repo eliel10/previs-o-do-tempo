@@ -81,5 +81,5 @@ A aplicação consome uma API de dados metereológicos dos servidores da [hgbras
 ## Links ##
 <br>
 
-* Pagina Web: https://previsao-do-tempo-a.netlify.app/
+* Pagina Web: https://previsao-do-tempo-b.netlify.app/
 * API HG Brasil: https://hgbrasil.com/
